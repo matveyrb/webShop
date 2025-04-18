@@ -1,6 +1,6 @@
 
 from flask import Flask
-from flask_bootstrap import Bootstrap5
+from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
@@ -10,7 +10,7 @@ from flask_wtf import CSRFProtect
 db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
-bootstrap = Bootstrap5()
+bootstrap = Bootstrap()
 
 
 def create_app(config_class='config.Config'):
