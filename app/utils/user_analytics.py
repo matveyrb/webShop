@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from app.models import VisitLog
 
 
 def analyze_user_behavior(days=30):

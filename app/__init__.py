@@ -1,14 +1,10 @@
-import stats
-from flask import Flask, request, make_response
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
-from flask_bootstrap import Bootstrap5
-from flask_migrate import Migrate
-from flask_wtf import CSRFProtect
-import uuid
-from datetime import datetime, timedelta
-from config import Config
 
+from flask import Flask
+from flask_bootstrap import Bootstrap5
+from flask_login import LoginManager
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+from flask_wtf import CSRFProtect
 
 # Инициализация расширений без приложения
 db = SQLAlchemy()

@@ -1,17 +1,18 @@
-from flask import render_template, redirect, url_for, flash, request, jsonify, abort as app, abort
-from app import db
-from app.models import User, Product, Order, OrderItem, CartItem
-from app.forms import LoginForm, RegistrationForm, CheckoutForm, EditProfileForm
-from flask_login import current_user, login_user, logout_user, login_required
 from urllib.parse import urlparse
+
+from flask import Blueprint
+from flask import render_template, redirect, url_for, flash, request, jsonify, abort
+from flask_login import current_user, login_user, logout_user, login_required
+
+from app import db
+from app.forms import LoginForm, RegistrationForm, CheckoutForm, EditProfileForm
+from app.models import User, Product, Order
 from app.utils.stats_utils import (
     get_visit_stats,
     get_sales_stats,
     get_popular_products,
     get_conversion_rate
 )
-
-from flask import Blueprint
 
 # Main Blueprint
 main_bp = Blueprint('main', __name__)
