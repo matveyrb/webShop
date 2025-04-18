@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section bg-light p-5 rounded-lg mb-5">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h1 class="display-4">Добро пожаловать в наш магазин!</h1>
+            <p class="lead">Широкий ассортимент товаров по доступным ценам.</p>
+            <a href="{{ url_for('products.catalog') }}" class="btn btn-primary btn-lg">Перейти в каталог</a>
+        </div>
+        <div class="col-md-6">
+            <img src="{{ url_for('static', filename='img/hero-image.jpg') }}" alt="Магазин" class="img-fluid rounded">
+        </div>
+    </div>
+</div>
+
+<div class="featured-products mb-5">
+    <h2 class="mb-4">Популярные товары</h2>
+    <div class="row">
+        {% for product in featured_products %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="{{ url_for('static', filename='img/products/' + product.image) }}" class="card-img-top" alt="{{ product.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description[:100] }}...</p>
+                    <p class="text-muted">{{ product.price }} руб.</p>
+                </div>
+                <div class="card-footer bg-white">
+                    <a href="{{ url_for('products.product_detail', product_id=product.id) }}" class="btn btn-outline-primary">Подробнее</a>
+                    <button class="btn btn-primary add-to-cart" data-product-id="{{ product.id }}">В корзину</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', function() {
+        const productId = this.getAttribute('data-product-id');
+        fetch('/cart/add/' + productId, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('cart-count').textContent = data.cart_count;
+                alert('Товар добавлен в корзину!');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

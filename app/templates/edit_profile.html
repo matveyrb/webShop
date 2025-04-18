@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Редактирование профиля{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2 class="mb-4">Редактирование профиля</h2>
+
+        <form method="POST" action="{{ url_for('auth.edit_profile') }}">
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+                {{ form.first_name.label(class="form-label") }}
+                {{ form.first_name(class="form-control") }}
+                {% if form.first_name.errors %}
+                    <div class="invalid-feedback" style="display: block;">
+                        {{ form.first_name.errors[0] }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.last_name.label(class="form-label") }}
+                {{ form.last_name(class="form-control") }}
+                {% if form.last_name.errors %}
+                    <div class="invalid-feedback" style="display: block;">
+                        {{ form.last_name.errors[0] }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control") }}
+                {% if form.email.errors %}
+                    <div class="invalid-feedback" style="display: block;">
+                        {{ form.email.errors[0] }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.phone.label(class="form-label") }}
+                {{ form.phone(class="form-control") }}
+                {% if form.phone.errors %}
+                    <div class="invalid-feedback" style="display: block;">
+                        {{ form.phone.errors[0] }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                {{ form.address.label(class="form-label") }}
+                {{ form.address(class="form-control") }}
+                {% if form.address.errors %}
+                    <div class="invalid-feedback" style="display: block;">
+                        {{ form.address.errors[0] }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="d-grid gap-2">
+                {{ form.submit(class="btn btn-primary") }}
+                <a href="{{ url_for('main.account') }}" class="btn btn-secondary">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

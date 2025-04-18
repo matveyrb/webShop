@@ -1,0 +1,161 @@
+/* style.css */
+
+/* ===== Основные переменные ===== */
+:root {
+    --primary-dark: #1e3c72;
+    --primary-light: #2a5298;
+    --footer-dark: #0f2027;
+    --footer-mid: #203a43;
+    --footer-light: #2c5364;
+}
+
+/* ===== Глобальные стили ===== */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    flex: 1;
+}
+
+/* ===== Навбар (верхняя панель) ===== */
+.navbar.bg-dark {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%) !important;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    padding: 0.8rem 0;
+}
+
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.5rem;
+    letter-spacing: -0.5px;
+    color: #fff !important;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand::before {
+    content: "";
+    margin-right: 8px;
+    font-size: 1.3em;
+}
+
+.nav-link {
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    transition: all 0.3s ease;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.nav-link:hover {
+    color: #fff !important;
+    transform: translateY(-1px);
+}
+
+.nav-item {
+    margin: 0 0.2rem;
+}
+
+#cart-count {
+    font-weight: 500;
+    margin-left: 3px;
+}
+
+/* ===== Выпадающее меню ===== */
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 0.5rem 0;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+}
+
+.dropdown-item:hover {
+    background-color: #f5f5f7;
+    color: var(--primary-dark) !important;
+}
+
+/* ===== Футер (нижняя панель) ===== */
+footer.bg-dark {
+    background: linear-gradient(135deg, var(--footer-dark) 0%, var(--footer-mid) 50%, var(--footer-light) 100%) !important;
+    padding: 2.5rem 0 1.5rem;
+    margin-top: 3rem;
+}
+
+footer h5 {
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+    color: #fff !important;
+    font-size: 1.1rem;
+}
+
+footer p, footer li {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+}
+
+footer a {
+    color: rgba(255, 255, 255, 0.7) !important;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: #fff !important;
+    text-decoration: none;
+}
+
+.bi {
+    font-size: 1.2rem;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+/* ===== Алерты ===== */
+.alert {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* ===== Адаптивность ===== */
+@media (max-width: 992px) {
+    .navbar-collapse {
+        padding: 1rem 0;
+    }
+
+    .nav-item {
+        margin: 0.3rem 0;
+    }
+
+    footer .col-md-6 {
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* ===== Анимации ===== */
+.navbar, footer {
+    transition: all 0.4s ease;
+}
+
+/* ===== Дополнительные стили для Apple-тематики ===== */
+.btn-primary {
+    background-color: var(--primary-light);
+    border-color: var(--primary-light);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.badge.bg-primary {
+    background-color: var(--primary-light) !important;
+}

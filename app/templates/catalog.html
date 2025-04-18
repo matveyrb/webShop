@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h1>Каталог товаров</h1>
+    </div>
+    <div class="col-md-6">
+        <form class="d-flex" action="{{ url_for('products.catalog') }}" method="get">
+            <input class="form-control me-2" type="search" name="q" placeholder="Поиск..." value="{{ request.args.get('q', '') }}">
+            <button class="btn btn-outline-success" type="submit">Найти</button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="card-header">
+                Фильтры
+            </div>
+            <div class="card-body">
+                <form id="filter-form">
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Категория</label>
+                        <select class="form-select" id="category" name="category">
+                            <option value="">Все</option>
+                            {% for category in categories %}
+                            <option value="{{ category }}" {% if request.args.get('category') == category %}selected{% endif %}>{{ category }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price_min" class="form-label">Цена от</label>
+                        <input type="number" class="form-control" id="price_min" name="price_min" value="{{ request.args.get('price_min', '') }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="price_max" class="form-label">Цена до</label>
+                        <input type="number" class="form-control" id="price_max" name="price_max" value="{{ request.args.get('price_max', '') }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Применить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="d-flex justify-content-between mb-3">
+            <div>
+                Найдено товаров: {{ products.total }}
+            </div>
+            <div>
+                <select class="form-select" id="sort" name="sort">
+    <option value="price_asc" {% if request.args.get('sort') == 'price_asc' %}selected{% endif %}>По возрастанию цены</option>
+    <option value="price_desc" {% if request.args.get('sort') == 'price_desc' %}selected{% endif %}>По убыванию цены</option>
+    <option value="name_asc" {% if request.args.get('sort') == 'name_asc' %}selected{% endif %}>По названию (А-Я)</option>
+    <option value="name_desc" {% if request.args.get('sort') == 'name_desc' %}selected{% endif %}>По названию (Я-А)</option>
+    <option value="newest" {% if request.args.get('sort', 'newest') == 'newest' %}selected{% endif %}>Сначала новые</option>
+</select>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for product in products.items %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img src="{{ url_for('static', filename='img/products/' + product.image) }}" class="card-img-top" alt="{{ product.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description[:100] }}...</p>
+                        <p class="text-muted">{{ product.price }} руб.</p>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <a href="{{ url_for('products.product_detail', product_id=product.id) }}" class="btn btn-outline-primary">Подробнее</a>
+                        <button class="btn btn-primary add-to-cart" data-product-id="{{ product.id }}">В корзину</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if products.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('products.catalog', page=products.prev_num, **request.args) }}">Назад</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Назад</span>
+                </li>
+                {% endif %}
+
+                {% for page_num in products.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                    {% if page_num %}
+                        {% if products.page == page_num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                        {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('products.catalog', page=page_num, **request.args) }}">{{ page_num }}</a>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if products.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('products.catalog', page=products.next_num, **request.args) }}">Вперед</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Вперед</span>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('sort').addEventListener('change', function() {
+    const url = new URL(window.location.href);
+    url.searchParams.set('sort', this.value);
+    window.location.href = url.toString();
+});
+
+document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', function() {
+        const productId = this.getAttribute('data-product-id');
+        fetch('/cart/add/' + productId, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('cart-count').textContent = data.cart_count;
+                alert('Товар добавлен в корзину!');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

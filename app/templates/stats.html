@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Статистика продаж{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Статистика продаж</h2>
+
+    <div class="row">
+        <!-- Карточка посещаемости -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Посещаемость</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <div class="text-center">
+                            <h3>{{ stats.visits.total }}</h3>
+                            <small class="text-muted">Всего визитов</small>
+                        </div>
+                        <div class="text-center">
+                            <h3>{{ stats.visits.unique }}</h3>
+                            <small class="text-muted">Уникальные</small>
+                        </div>
+                    </div>
+                    <canvas id="visitsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Карточка конверсии -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Конверсия</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <div class="text-center">
+                            <h3>{{ stats.conversion.rate }}%</h3>
+                            <small class="text-muted">Общая конверсия</small>
+                        </div>
+                        <div class="text-center">
+                            <h3>{{ stats.conversion.add_to_cart }}</h3>
+                            <small class="text-muted">Добавления в корзину</small>
+                        </div>
+                        <div class="text-center">
+                            <h3>{{ stats.conversion.purchases }}</h3>
+                            <small class="text-muted">Покупки</small>
+                        </div>
+                    </div>
+                    <canvas id="conversionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Инициализация графиков
+document.addEventListener('DOMContentLoaded', function() {
+    // График посещаемости
+    new Chart(document.getElementById('visitsChart'), {
+        type: 'line',
+        data: {
+            labels: {{ stats.visits.days|tojson }},
+            datasets: [{
+                label: 'Посещения',
+                data: {{ stats.visits.visits_data|tojson }},
+                borderColor: '#4e73df',
+                tension: 0.1
+            }]
+        }
+    });
+
+    // График конверсии
+    new Chart(document.getElementById('conversionChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Просмотры', 'Корзины', 'Покупки'],
+            datasets: [{
+                data: [
+                    {{ stats.conversion.views }},
+                    {{ stats.conversion.add_to_cart }},
+                    {{ stats.conversion.purchases }}
+                ],
+                backgroundColor: [
+                    '#e74a3b',
+                    '#f6c23e',
+                    '#1cc88a'
+                ]
+            }]
+        }
+    });
+
+    // График продаж
+    new Chart(document.getElementById('salesChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ stats.sales.dates|tojson }},
+            datasets: [{
+                label: 'Продажи (шт)',
+                data: {{ stats.sales.quantities|tojson }},
+                backgroundColor: '#4e73df'
+            }, {
+                label: 'Доход (руб)',
+                data: {{ stats.sales.amounts|tojson }},
+                backgroundColor: '#1cc88a'
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                    stacked: false
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

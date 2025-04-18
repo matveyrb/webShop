@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Заказ #{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">Заказ #{{ order.id }}</h4>
+                        <span class="badge
+                            {% if order.status == 'completed' %}bg-success
+                            {% elif order.status == 'cancelled' %}bg-danger
+                            {% else %}bg-primary{% endif %}">
+                            {{ order.status }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5 class="mb-3">Детали заказа</h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <span class="text-muted">Дата:</span>
+                                    <strong>{{ order.created_at.strftime('%d.%m.%Y в %H:%M') }}</strong>
+                                </li>
+                                <li class="mb-2">
+                                    <span class="text-muted">Сумма:</span>
+                                    <strong>{{ "%.2f"|format(order.total) }} ₽</strong>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h5 class="mb-3">Товары в заказе</h5>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr class="bg-light">
+                                    <th>Товар</th>
+                                    <th class="text-end">Цена</th>
+                                    <th class="text-center">Кол-во</th>
+                                    <th class="text-end">Сумма</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in order.items %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if item.product.image %}
+                                            <img src="{{ url_for('static', filename='uploads/' + item.product.image) }}"
+                                                 alt="{{ item.product.name }}"
+                                                 class="rounded me-3"
+                                                 width="60" height="60">
+                                            {% endif %}
+                                            <div>
+                                                <h6 class="mb-1">{{ item.product.name }}</h6>
+                                                <small class="text-muted">Артикул: {{ item.product.id }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-end">{{ "%.2f"|format(item.price) }} ₽</td>
+                                    <td class="text-center">{{ item.quantity }}</td>
+                                    <td class="text-end">{{ "%.2f"|format(item.price * item.quantity) }} ₽</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot class="border-top">
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Итого:</strong></td>
+                                    <td class="text-end"><strong>{{ "%.2f"|format(order.total) }} ₽</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <a href="{{ url_for('main.account') }}" class="btn btn-primary">
+                            <i class="bi bi-arrow-left"></i> Вернуться в личный кабинет
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
