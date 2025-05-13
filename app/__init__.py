@@ -18,7 +18,7 @@ def create_app(config_class='config.Config'):
     app.config.from_object(config_class)
 
     # Конфигурация приложения
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://my_shop_render_user:8dhqNSXKPDDTIx7dPilCUU4SQirRh8vK@dpg-d01353qdbo4c73dqbts0-a/my_shop_render'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://my_shop_render_user:8dhqNSXKPDDTIx7dPilCUU4SQirRh8vK@dpg-d01353qdbo4c73dqbts0-a.virginia-postgres.render.com/my_shop_render'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['WTF_CSRF_ENABLED'] = False
 
